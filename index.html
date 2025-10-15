@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Print Job Label</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    #qr {
+      margin: 20px auto;
+    }
+    .info {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button {
+      background: #2c7be5;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1b5ccc;
+    }
+  </style>
+</head>
+<body>
+  <h2>Repair Job Label</h2>
+  <div id="qr"></div>
+  <div class="info" id="info"></div>
+  <button id="printBtn">🖨 Print with RawBT</button>
+
+  <script>
+    // Get query params from URL
+    const params = new URLSearchParams(window.location.search);
+    const job = params.get("job");
+    const customer = params.get("customer");
+    const model = params.get("model");
+    const issue = params.get("issue");
+
+    // Generate QR code using quickchart.io
+    const qrData = `https://www.appsheet.com/start?appName=YourAppName&page=detail&table=Repair%20Data&row=${job}`;
+    const qrUrl = `https://quickchart.io/qr?text=${encodeURIComponent(qrData)}&size=200`;
+
+    document.getElementById("qr").innerHTML = `<img src="${qrUrl}" width="200" height="200"/>`;
+    document.getElementById("info").innerHTML = `
+      <b>Job:</b> ${job}<br>
+      <b>Customer:</b> ${customer}<br>
+      <b>Model:</b> ${model}<br>
+      <b>Issue:</b> ${issue}
+    `;
+
+    // Print via RawBT
+    document.getElementById("printBtn").addEventListener("click", () => {
+      const html = `
+        JOB: ${job}\n
+        CUSTOMER: ${customer}\n
+        MODEL: ${model}\n
+        ISSUE: ${issue}\n
+      `;
+      const rawbtURL = `intent://print/#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;S.text=${encodeURIComponent(html)};end`;
+      window.location.href = rawbtURL;
+    });
+  </script>
+</body>
+</html>
