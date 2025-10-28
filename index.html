@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Job Label</title>
+  <title>Print QR Label</title>
   <style>
     body {
       width: 50mm;
@@ -10,51 +10,33 @@
       margin: 0;
       padding: 0;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-family: Arial, sans-serif;
-      font-size: 10px;
-      text-align: center;
       overflow: hidden;
+      background: white;
     }
     img {
-      width: 20mm;
-      height: 20mm;
+      width: 25mm;
+      height: 25mm;
       object-fit: contain;
-      margin-bottom: 2mm;
-    }
-    .text {
-      line-height: 1.1;
     }
   </style>
 </head>
 <body>
-  <div id="label"></div>
-
+  <img id="qr" alt="QR" />
   <script>
     const params = new URLSearchParams(window.location.search);
-    const job = params.get("job") || "";
-    const customer = params.get("customer") || "";
-    const model = params.get("model") || "";
-
-    const qrData = `JOB:${job}, MODEL:${model}`;
-    const qrUrl = `https://quickchart.io/qr?text=${encodeURIComponent(qrData)}&size=200`;
-
-    document.getElementById("label").innerHTML = `
-      <img src="${qrUrl}" />
-      <div class="text">
-        <b>${job}</b><br>
-        ${customer}<br>
-        ${model}
-      </div>
-    `;
-
-    // auto print via RawBT
-    setTimeout(() => {
-      const rawbtUrl = "rawbt:image," + encodeURIComponent(qrUrl);
-      window.location.href = rawbtUrl;
-    }, 1000);
+    const qr = params.get("qr");
+    if (qr) {
+      document.getElementById("qr").src = qr;
+      // Wait 1 sec to ensure image loads
+      setTimeout(() => {
+        const rawbtUrl = "rawbt:image," + encodeURIComponent(qr);
+        window.location.href = rawbtUrl;
+      }, 1000);
+    } else {
+      document.body.innerHTML = "<p>No QR found</p>";
+    }
   </script>
 </body>
 </html>
