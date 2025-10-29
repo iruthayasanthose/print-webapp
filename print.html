@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Print QR</title>
+  <title>Print QR Label</title>
   <style>
     body {
       width: 50mm;
@@ -15,9 +15,10 @@
       align-items: center;
       background: white;
       overflow: hidden;
+      font-family: Arial, sans-serif;
     }
     img {
-      width: 26mm;   /* keeps margin on both sides */
+      width: 26mm;
       height: 26mm;
       object-fit: contain;
       margin-bottom: 1mm;
@@ -30,6 +31,16 @@
       overflow: hidden;
       white-space: nowrap;
     }
+    button {
+      margin-top: 4mm;
+      background: #2c7be5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 10pt;
+      cursor: pointer;
+    }
   </style>
   <script>
     async function printImage(url) {
@@ -37,7 +48,6 @@
         const response = await fetch(url);
         const blob = await response.blob();
         const reader = new FileReader();
-
         reader.onloadend = function () {
           const base64Data = reader.result.split(',')[1];
           const rawbtUrl =
@@ -48,10 +58,9 @@
             'end;';
           window.location.href = rawbtUrl;
         };
-
         reader.readAsDataURL(blob);
       } catch (e) {
-        document.body.innerHTML = '⚠️ Print failed: ' + e.message;
+        alert('⚠️ Print failed: ' + e.message);
       }
     }
 
@@ -68,13 +77,12 @@
       document.body.innerHTML = `
         <img id="qrimg" src="${qrUrl}" />
         <div class="label-text">${label}</div>
+        <button onclick="printImage('${qrUrl}')">🖨 Print Label</button>
       `;
-
-      setTimeout(() => printImage(qrUrl), 1200);
     };
   </script>
 </head>
 <body>
-  <h3>Preparing print...</h3>
+  <h3>Loading label...</h3>
 </body>
 </html>
