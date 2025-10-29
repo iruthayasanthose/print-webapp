@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Print QR</title>
+  <script>
+    window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const qr = params.get("qr");
+      if (qr) {
+        // wait a moment to load
+        setTimeout(() => {
+          const rawbtUrl = "rawbt:image," + encodeURIComponent(qr);
+          window.location.href = rawbtUrl;
+        }, 1500);
+      } else {
+        document.body.innerHTML = "❌ Missing QR code URL";
+      }
+    };
+  </script>
+</head>
+<body>
+  <h3>Printing label...</h3>
+</body>
+</html>
